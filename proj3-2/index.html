@@ -1,7 +1,155 @@
-<html>
-	<head>
-	</head>
-	<body>
-		Project 3-2 here
-	</body>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<style>  
+    div.padded {  
+      padding-top: 0px;  
+      padding-right: 100px;  
+      padding-bottom: 0.25in;  
+      padding-left: 100px;  
+    }  
+  </style> 
+<title>Project 3-2  |  CS 184</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+</head>
+<body>
+<br />
+<h1 align="middle">Assignment 3: PathTracer</h1>
+    <h2 align="middle">Cyrus Hamirani, Abhik Ahuja</h2>
+
+    <div class="padded">
+        <p>For this project, we chose to do parts 2 (microfacet materials) and 4 (depth of field). In part 2, we learned about how microfacet materials interact with light and how it differs from the previous materials we worked with. We also learned a lot about lens effects through part 4.</p>
+
+    <h2 align="middle">Part 2: Microfacet Material</h2>
+        <h4>Roughness</h4>
+        <p>Here is a sequence of four images of the scene CBdragon_microfacet_au.dae. They are rendered with alpha values set to 0.005, 0.05, 0.25, and 0.5. Each image uses 128 samples per pixel, and 1 sample per light, number of bounces is set to 5.
+            The alpha value represents roughness; the smaller the value of alpha, the more smooth the surface will be. </p>
+        <div align="center">
+            <table style="width=100%">
+                <tr>
+                    <td align="middle">
+                        <img src="images/0005part2.jpg" width="480px" />
+                        <figcaption align="middle">Alpha = 0.005</figcaption>
+                    <td align="middle">
+                        <img src="images/005part2.jpg" width="480px" />
+                        <figcaption align="middle">Alpha = 0.05</figcaption>
+                </tr>
+                <tr>
+                    <td align="middle">
+                        <img src="images/025part2.jpg" width="480px" />
+                        <figcaption align="middle">Alpha = 0.25</figcaption>
+                    <td align="middle">
+                        <img src="images/05part2.jpg" width="480px" />
+                        <figcaption align="middle">Alpha = 0.5</figcaption>
+                </tr>
+            </table>
+
+            <p>As you can see from the pictures, the dragon begins at alpha = 0.005 as very shiny and glossy. As the roughness alpha value is increased, we see the shine of the dragon gradually decrease
+                until the surface is diffuse, and very little shine from its surroundings is visible.</p>
+
+            <h4> Cosine hemisphere sampling vs. importance sampling </h4>
+
+            <p> Here are two pictures comparing our importance sampling for microfacet materials and cosine hemispheric sampling. Both images are rendered with 64 samples per pixel and 5 light bounces.</p>
+
+            <div align="center">
+                <table style="width=100%">
+                    <tr>
+                        <td align="middle">
+                            <img src="images/bunnyhem.png" width="480px" />
+                            <figcaption align="middle">Cosine hemisphere sampling</figcaption>
+                        <td align="middle">
+                            <img src="images/bunnyimp.jpg" width="480px" />
+                            <figcaption align="middle">Our importance sampling for microfacet materials</figcaption>
+                    </tr>
+                </table>
+            </div>
+            <p> Our importance sampling for microfacet materials outperforms the cosine hemisphere sampling by image quality considerably. This is because it takes much longer for cosine hemisphere sampling
+            to converge to an approximately correct result, so when both methods are given the same amount of samples per pixel, the importance sampling method looks much better.</p>
+
+            <h4>Niobium material bunny</h4>
+            <p>We rendered the bunny scene, setting the bunny material's eta and k values to values corresponding to the material Niobium. The resulting image is displayed below.
+            Here are the parameters: RED:
+                n = 2.3288
+                Extinction coefficient
+                k = 2.0000e-7,
+
+                GREEN: Refractive index
+                n = 2.3609
+                Extinction coefficient
+                k = 0.0000030000,
+
+                BLUE: Refractive index
+                n = 2.4313
+                Extinction coefficient
+                k = 0.000045400
+
+                </p>
+
+            <div align="center">
+                <table style="width=100%">
+                    <tr>
+                        <td align="middle">
+                            <img src="images/bunnyniobium.jpg" width="480px" />
+                            <figcaption align="middle">Niobium bunny</figcaption>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+
+	<h2 align="middle">Part 4: Depth of Field</h2>
+	<p>In a pinhole camera, all camera rays are effectively going through one spot in a lens, so the entire image is always in focus. It is as if the entire lens only exists at (0, 0, 0), in our implementation. However, in a thin lens model, each sensor pixel samples a ray towards a random point on the lens, which is then refracted towards the point of focus. This means that each pixel on the sensor gets light from different points on the lens, leading to a blurred look as all those light rays combine.</p>
+            <table style="width=100%">
+                <tr>
+                    <td align="middle">
+                        <img src="images/dof1.png" width="480px" />
+                        <figcaption align="middle">Dragon with focus on left wall</figcaption>
+                    <td align="middle">
+                        <img src="images/dof2.png" width="480px" />
+                        <figcaption align="middle">Dragon with focus on head</figcaption>
+                </tr>
+                <tr>
+                    <td align="middle">
+                        <img src="images/dof3.png" width="480px" />
+                        <figcaption align="middle">Dragon with focus on tail</figcaption>
+                    <td align="middle">
+                        <img src="images/dof4.png" width="480px" />
+                        <figcaption align="middle">Dragon with focus on upper-right back wall</figcaption>
+                </tr>
+            </table>
+
+            <h3> Varying lens radius </h3>
+
+            <p> Here is the same bunny scene rendered four times with varying lens radius. Each time, the camera is focused
+            at the center of the bunny. Notice how the smallest lens radius (0.01) closely resembles the pinhole camera model.
+            As the lens increases in size, more and more parts of the scene come out of focus.</p>
+
+            <table style="width=100%">
+                <tr>
+                    <td align="middle">
+                        <img src="images/b01.png" width="480px" />
+                        <figcaption align="middle">Bunny with lens radius: 0.01</figcaption>
+                    <td align="middle">
+                        <img src="images/b10.png" width="480px" />
+                    <figcaption align="middle">Bunny with lens radius: 0.10</figcaption>
+                </tr>
+                <tr>
+                    <td align="middle">
+                        <img src="images/b25.png" width="480px" />
+                        <figcaption align="middle">Bunny with lens radius: 0.25</figcaption>
+                    <td align="middle">
+                        <img src="images/b50.png" width="480px" />
+                    <figcaption align="middle">Bunny with lens radius: 0.50</figcaption>
+                </tr>
+            </table>
+
+
+</div>
+</body>
 </html>
+
+
+
+
